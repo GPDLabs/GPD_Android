@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity2">
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- WiFi配置标签 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="QR配置"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <!-- WiFi名称输入框 -->
+        <EditText
+            android:id="@+id/wifi_name_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="WiFi名称"
+            android:inputType="text"
+            android:layout_marginTop="16dp" />
+
+        <!-- WiFi密码输入框 -->
+        <EditText
+            android:id="@+id/wifi_password_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="WiFi密码"
+            android:inputType="textPassword"
+            android:layout_marginTop="16dp" />
+
+        <!-- 获取WiFi和配置WiFi按钮 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <Button
+                android:id="@+id/get_wifi_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="获取WiFi" />
+
+            <Button
+                android:id="@+id/configure_wifi_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="配置WiFi"
+                android:layout_marginStart="16dp" />
+
+        </LinearLayout>
+
+        <!-- 获取钱包地址按钮 -->
+        <Button
+            android:id="@+id/get_wallet_address_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="获取钱包地址"
+            android:layout_marginTop="16dp" />
+
+        <!-- 显示钱包地址标签 -->
+        <TextView
+            android:id="@+id/wallet_address_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="钱包地址："
+            android:textSize="18sp"
+            android:layout_marginTop="16dp" />
+
+        <!-- 输入VQR节点IP输入框 -->
+        <EditText
+            android:id="@+id/vqr_node_ip_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="输入VQR节点IP"
+            android:inputType="text"
+            android:layout_marginTop="16dp" />
+
+        <!-- 连接VQR按钮 -->
+        <Button
+            android:id="@+id/connect_vqr_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="连接VQR"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
