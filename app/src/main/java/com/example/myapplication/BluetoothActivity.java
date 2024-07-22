@@ -459,6 +459,8 @@ public class BluetoothActivity extends AppCompatActivity {
         //获取随机数点击事件
         Button btnGetRandom = findViewById(R.id.get_random);
         btnGetRandom.setOnClickListener(v -> {
+//            writeDataFile("random-0001.txt", "test");
+//            readDataFile("random-0001.txt");
             requestPermission();
 
 
@@ -598,6 +600,7 @@ public class BluetoothActivity extends AppCompatActivity {
             byte[] buffer = new byte[length];
             fin.read(buffer);
             res = new String(buffer);
+            Log.i("writeRandomFile", "读取文件：" + res);
             fin.close();
 
         } catch (Exception e) {
@@ -616,27 +619,44 @@ public class BluetoothActivity extends AppCompatActivity {
         return appNameDir;
     }
 
-    //写入内置data目录下文件
-    private void writeDataFile(String fileName, String content) {
-        try {
-            File randomDir = createAppNameDirectory();
-            File randomFile = new File(randomDir, fileName);
-            String filePath = randomFile.getAbsolutePath();
-            Log.i("writeRandomFile","文件的绝对路径: " + filePath);
-            if (!randomFile.exists()) {
-                randomFile.createNewFile();
-            }
+    //Write files to the data directory
+    private void writeDataFile(String fileName, String content){
+        Context context = getApplicationContext();
 
+        try{
+            OutputStream outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            outputStream.write(content.getBytes());
 
-            Writer writer = new OutputStreamWriter(new FileOutputStream(randomFile));
-            writer.write(content);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e("Exception", "writeDataFile Error!" + e.getMessage());
+            File filesDir = context.getFilesDir();
+            File file = new File(filesDir, fileName);
+            Log.i("writeRandomFile", "File absolute path: " + file.getAbsolutePath());
+            outputStream.close();
+        }catch (Exception e){
+            Log.i("writeRandomFile", "写入文件异常：" + e.toString());
         }
-
     }
+
+
+    //Write files to the built-in storage directory
+//    private void writeDataFile(String fileName, String content) {
+//        try {
+//            File randomDir = createAppNameDirectory();
+//            File randomFile = new File(randomDir, fileName);
+//            String filePath = randomFile.getAbsolutePath();
+//            Log.i("writeRandomFile","文件的绝对路径: " + filePath);
+//            if (!randomFile.exists()) {
+//                randomFile.createNewFile();
+//            }
+//
+//
+//            Writer writer = new OutputStreamWriter(new FileOutputStream(randomFile));
+//            writer.write(content);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Log.e("Exception", "writeDataFile Error!" + e.getMessage());
+//        }
+//    }
 
     @Override
     protected void onDestroy() {

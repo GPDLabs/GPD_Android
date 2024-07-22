@@ -19,7 +19,7 @@ public class BlueToothController {
     }
 
     /**
-     * 是否支持蓝牙
+     * is support bluetooth
      * @return
      */
     public boolean isSupportBlueTooth(){
@@ -31,8 +31,8 @@ public class BlueToothController {
     }
 
     /**
-     * 判断蓝牙当前状态
-     * @return true 打开，false 关闭
+     * Determine the current status of Bluetooth
+     * @return true open，false close
      */
     public boolean getBlueToothStatus(){
         if(isSupportBlueTooth()){
