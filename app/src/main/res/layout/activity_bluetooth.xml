@@ -12,7 +12,7 @@
             android:id="@+id/tv_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="蓝牙状态"
+            android:text="Bluetooth Status"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -20,17 +20,17 @@
             android:id="@+id/btn_open"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="打开蓝牙" />
+            android:text="Open Bluetooth" />
         <Button
             android:id="@+id/btn_close"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="关闭蓝牙" />
+            android:text="Close Bluetooth" />
         <Button
             android:id="@+id/btn_scan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="扫描蓝牙设备" />
+            android:text="Scan Bluetooth Devices" />
 
         <ListView
             android:id="@+id/bluetooth_devices_list"
@@ -42,7 +42,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="QR配置"
+            android:text="Initialization"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -51,7 +51,7 @@
             android:id="@+id/wifi_name_input2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="WiFi名称"
+            android:hint="WiFi Name"
             android:inputType="text"
             android:layout_marginTop="16dp" />
 
@@ -60,7 +60,7 @@
             android:id="@+id/wifi_password_input2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="WiFi密码"
+            android:hint="WiFi Password"
             android:inputType="textPassword"
             android:layout_marginTop="16dp" />
 
@@ -76,14 +76,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="获取WiFi" />
+                android:text="Get WiFi Name" />
 
             <Button
                 android:id="@+id/configure_wifi_button2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="配置WiFi"
+                android:text="Connect WiFi"
                 android:layout_marginStart="16dp" />
 
         </LinearLayout>
@@ -93,7 +93,7 @@
             android:id="@+id/get_wallet_address_button2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="获取钱包地址"
+            android:text="Get Wallet Address"
             android:layout_marginTop="16dp" />
 
         <!-- 显示钱包地址标签 -->
@@ -101,7 +101,7 @@
             android:id="@+id/wallet_address_label2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="钱包地址："
+            android:text="Wallet Address:"
             android:textSize="18sp"
             android:layout_marginTop="16dp" />
 
@@ -110,15 +110,14 @@
             android:id="@+id/get_random"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="获取随机数"
+            android:text="GET RANDOM"
             android:layout_marginTop="16dp" />
 
         <TextView
             android:id="@+id/random_file_path"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="输入VQR节点IP"
-            android:inputType="text"
+            android:textSize="18sp"
             android:layout_marginTop="16dp" />
 
 
