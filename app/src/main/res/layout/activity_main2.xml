@@ -92,7 +92,7 @@
 
         <!-- 连接VQR按钮 -->
         <Button
-            android:id="@+id/connect_vqr_button"
+            android:id="@+id/connect_vqr_usb"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Connect VQR Point"

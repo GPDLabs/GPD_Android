@@ -60,4 +60,16 @@ public class DataUtil {
         return new String(code);
     }
 
+    // 使用正则表达式校验IPv4地址
+    public static boolean isValidIP(String ip) {
+        String ipPattern = "^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
+                "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
+                "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
+                "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+
+        Pattern pattern = Pattern.compile(ipPattern);
+        Matcher matcher = pattern.matcher(ip);
+        return matcher.matches();
+    }
+
 }

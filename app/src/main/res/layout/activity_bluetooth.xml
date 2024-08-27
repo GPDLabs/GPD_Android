@@ -105,6 +105,23 @@
             android:textSize="18sp"
             android:layout_marginTop="16dp" />
 
+
+        <!-- IP of the VQR Node -->
+        <EditText
+            android:id="@+id/vqr_ip_input_ble"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Please enter IP of the VQR node"
+            android:inputType="text"
+            android:layout_marginTop="16dp"/>
+
+        <Button
+            android:id="@+id/connect_vqr_button_ble"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Connect WiFi"
+            android:layout_marginTop="16dp" />
+
         <!-- 获取随机数按钮 -->
         <Button
             android:id="@+id/get_random"

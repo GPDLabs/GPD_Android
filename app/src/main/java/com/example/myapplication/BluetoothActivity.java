@@ -39,6 +39,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.myapplication.bluetooth.ConnectThread;
 import com.example.myapplication.bluetooth.Constant;
+import com.example.myapplication.entity.ConnectVqrEntity;
 import com.example.myapplication.entity.GetRandomEntity;
 import com.example.myapplication.entity.HeaderEntity;
 import com.example.myapplication.entity.MessageBodyEntity;
@@ -82,7 +83,7 @@ public class BluetoothActivity extends AppCompatActivity {
     private BluetoothSocket bluetoothSocket;
     private ConnectThread mConnectThread;
 
-//    private Handler handler = new BluetoothHandler();
+    //    private Handler handler = new BluetoothHandler();
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -99,7 +100,7 @@ public class BluetoothActivity extends AppCompatActivity {
                         JSONObject jsonRspBody = new JSONObject(rspBody);
                         String rspType = jsonRspBody.getString("messageType");
                         String rspData = jsonRspBody.getString("messageData");
-                        Log.i("bluetooth-WiFi","校验码：" + rspHeader);
+                        Log.i("bluetooth_handler","校验码：" + rspHeader);
                         ClassifyResponseData(rspType, rspData);
                     } catch (Exception e) {
                         Log.i("bluetooth_handler", "Errer:" + e.toString());
@@ -138,6 +139,11 @@ public class BluetoothActivity extends AppCompatActivity {
                     HandleWalletAddrRsp(responseWalletAddr);
                 }
                 break;
+                case "vqrIPConfResult":{
+                    JSONObject jsonRspData = new JSONObject(rspData);
+                    String rspStatus = jsonRspData.getString("status");
+                }
+                break;
                 case "getRandomResult":{
                     ResponseGetRandomEntity responseGetRandom
                             = objectMapper.readValue(rspData, ResponseGetRandomEntity.class);
@@ -161,10 +167,10 @@ public class BluetoothActivity extends AppCompatActivity {
                 // 更新UI，例如显示接收到的消息
                 Button btnWifiConf = findViewById(R.id.configure_wifi_button2);
                 if(responseWirelessConf.getStatus() != "success"){
-                    showToast("QR已成功连接WiFi");
+                    showToast("QR device successfully connected to WiFi");
                     btnWifiConf.setEnabled(false);
                 }else{
-                    showToast("QR连接WiFi失败，请检查账号密码是否正确");
+                    showToast("QR device failed to connect to WiFi, please check if the account password is right");
                 }
 
             }
@@ -180,7 +186,23 @@ public class BluetoothActivity extends AppCompatActivity {
                 if(responseWalletAddr.getStatus() != "success"){
                     tvWalletAddr.setText(responseWalletAddr.getWalletAddr());
                 }else{
-                    showToast("QR生成地址失败！");
+                    showToast("QR device failed to generate wallet address!");
+                }
+
+            }
+        });
+    }
+
+    private void HandleConnectVqrRsp(String rspStatus){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Button btnConnectVqr = findViewById(R.id.connect_vqr_button_ble);
+                if(rspStatus == "success"){
+                    showToast("QR device successfully connected to VQR node");
+                    btnConnectVqr.setEnabled(false);
+                }else{
+                    showToast("QR device failed to connect to VQR node, please check if the IP address is right");
                 }
 
             }
@@ -197,7 +219,7 @@ public class BluetoothActivity extends AppCompatActivity {
                     writeDataFile("random-0001.txt", responseGetRandom.getRandom());
 
                 }else{
-                    showToast("QR生成地址失败！");
+                    showToast("QR device failed to generate address!");
                 }
 
             }
@@ -231,9 +253,9 @@ public class BluetoothActivity extends AppCompatActivity {
         new ActivityResultContracts.StartActivityForResult(),
         result -> {
             if (result.getResultCode() == RESULT_OK) {
-                showToast("蓝牙已打开");
+                showToast("Bluetooth is turned on");
             } else {
-                showToast("请授权蓝牙权限以确保APP正常工作");
+                showToast("Please authorize Bluetooth permission to ensure the APP works properly");
             }
         }
     );
@@ -255,12 +277,12 @@ public class BluetoothActivity extends AppCompatActivity {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == RESULT_OK) {
-                    showToast("权限已授予");
+                    showToast("Permission granted");
                     Log.i("writeRandomFile", "权限已授予");
                     writeDataFile("/random-0001.txt", "");
                 } else {
                     // 用户未启用蓝牙，处理这种情况
-                    Toast.makeText(BluetoothActivity.this, "请授权确保APP能保存随机数文件", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BluetoothActivity.this, "Please authorize to ensure that the app can save random number files", Toast.LENGTH_SHORT).show();
                 }
             }
     );
@@ -268,7 +290,7 @@ public class BluetoothActivity extends AppCompatActivity {
     private void scanForDevices() {
         if (!bluetoothAdapter.isEnabled()) {
             // 蓝牙未打开，提示用户打开蓝牙
-            Toast.makeText(this, "蓝牙未打开", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Bluetooth not turned on", Toast.LENGTH_SHORT).show();
         } else {
             // 蓝牙已打开，开始扫描
             bluetoothDevicesAdapter.clear();
@@ -276,7 +298,7 @@ public class BluetoothActivity extends AppCompatActivity {
                     android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     || ActivityCompat.checkSelfPermission(BluetoothActivity.this,
                     android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                showToast("无位置权限");
+                showToast("No location permission");
             }
             if (ActivityCompat.checkSelfPermission(BluetoothActivity.this, android.Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
 
@@ -284,7 +306,7 @@ public class BluetoothActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(BluetoothActivity.this, new String[]{android.Manifest.permission.BLUETOOTH_SCAN }, REQUEST_BLUETOOTH_SCAN);
                 return;
             }
-            showToast("开始搜索");
+            showToast("Starting the Search");
             boolean startScan = bluetoothAdapter.startDiscovery();
             Log.i("bluetooth", "开启：" + startScan);
         }
@@ -299,10 +321,11 @@ public class BluetoothActivity extends AppCompatActivity {
 
         EditText wifiNameInput = findViewById(R.id.wifi_name_input2);
         EditText wifiPasswordInput = findViewById(R.id.wifi_password_input2);
+        EditText vqrIpInput = findViewById(R.id.vqr_ip_input_ble);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
-            Toast.makeText(this, "设备不支持蓝牙", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "The device does not support Bluetooth", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -326,7 +349,7 @@ public class BluetoothActivity extends AppCompatActivity {
                     mConnectThread.start();
 //                    connectToDevice(selectedDevice);
                 }else{
-                    showToast("蓝牙地址不规范，请检查后再连接");
+                    showToast("The Bluetooth address is not standardized. Please check before connecting again");
                 }
             }
         });
@@ -340,7 +363,7 @@ public class BluetoothActivity extends AppCompatActivity {
                 openBluetoothLauncher.launch(enableBtIntent);
             } else {
                 // 蓝牙已打开，可以进行下一步操作
-                showToast("蓝牙已打开");
+                showToast("Bluetooth is turned on");
             }
         });
 
@@ -384,7 +407,7 @@ public class BluetoothActivity extends AppCompatActivity {
             WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
             // 检查WiFi是否已打开
             if (!wifiManager.isWifiEnabled()) {
-                Toast.makeText(BluetoothActivity.this, "WiFi未打开", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BluetoothActivity.this, "WiFi not turned on", Toast.LENGTH_SHORT).show();
                 return;
             }
             ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -396,7 +419,7 @@ public class BluetoothActivity extends AppCompatActivity {
                     String ssid = wifiInfo.getSSID();
                     wifiNameInput.setText(ssid.replace("\"", ""));
                 } else {
-                    Toast.makeText(BluetoothActivity.this, "未连接到WiFi", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BluetoothActivity.this, "Not connected to WiFi", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -423,7 +446,7 @@ public class BluetoothActivity extends AppCompatActivity {
                 if(mConnectThread != null){
                     mConnectThread.sendData(jsonMessage.getBytes());
                 }else{
-                    showToast("未连接到QR设备，请连接后再试。");
+                    showToast("Not connected to QR device, please connect and try again.");
                 }
             } catch (JsonProcessingException e) {
                 Log.i("QR_Config", "报错：" + e.toString());
@@ -447,7 +470,7 @@ public class BluetoothActivity extends AppCompatActivity {
                 if(mConnectThread != null){
                     mConnectThread.sendData(jsonMessage.getBytes());
                 }else{
-                    showToast("未连接到QR设备，请连接后再试。");
+                    showToast("Not connected to QR device, please connect and try again.");
                 }
             } catch (JsonProcessingException e) {
                 Log.i("QR_Config", "报错：" + e.toString());
@@ -455,6 +478,38 @@ public class BluetoothActivity extends AppCompatActivity {
             }
 
         });
+
+        Button btnConnectVqr = findViewById(R.id.connect_vqr_button_ble);
+        btnConnectVqr.setOnClickListener(v -> {
+            String ipAddress = vqrIpInput.getText().toString().trim();
+            if (DataUtil.isValidIP(ipAddress)) {
+                ConnectVqrEntity connectVqr = new ConnectVqrEntity(ipAddress, 1);
+
+                MessageBodyEntity messageBody = new MessageBodyEntity("vqrIPConf", connectVqr);
+                HeaderEntity header = new HeaderEntity(1, MessageTypeEnum.request, "1.0", DataUtil.generateRandomCode());
+                MessageEntity message = new MessageEntity(header, messageBody);
+                ObjectMapper objectMapper = new ObjectMapper();
+                try {
+                    String jsonMessageBody = objectMapper.writeValueAsString(messageBody);
+                    Log.i("VQR_IP_Conf", "messageBody:" + jsonMessageBody + "    messageBody长度：" + jsonMessageBody.length());
+                    message.getHeader().setMessageLength(jsonMessageBody.length());
+                    Log.i("VQR_IP_Conf", "jsonMessageBody长度 ： " + jsonMessageBody.length() + "  @MessageBodyEntity:" + "MessageBodyEntity".length());
+                    String jsonMessage = objectMapper.writeValueAsString(message);
+                    Log.i("VQR_IP_Conf", "Message:" + jsonMessage);
+                    if(mConnectThread != null){
+                        mConnectThread.sendData(jsonMessage.getBytes());
+                    }else{
+                        showToast("Not connected to QR device, please connect and try again.");
+                    }
+                } catch (JsonProcessingException e) {
+                    Log.i("VQR_IP_Conf", "报错：" + e.toString());
+                    throw new RuntimeException(e);
+                }
+            } else {
+                showToast("Invalid IP address, please enter a valid IP address");
+            }
+        });
+
 
         //获取随机数点击事件
         Button btnGetRandom = findViewById(R.id.get_random);
@@ -518,7 +573,7 @@ public class BluetoothActivity extends AppCompatActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     scanForDevices();
                 } else {
-                    showToast("蓝牙扫描权限未授予");
+                    showToast("Bluetooth scanning permission not granted");
                 }
             }
             break;
@@ -528,7 +583,7 @@ public class BluetoothActivity extends AppCompatActivity {
                     // 用户已经授予了权限，现在可以继续搜索蓝牙设备
                     scanForDevices();
                 } else {
-                    showToast("蓝牙连接权限未授予");
+                    showToast("Bluetooth scanning permission not granted");
                 }
             }
             break;
@@ -540,12 +595,11 @@ public class BluetoothActivity extends AppCompatActivity {
                     sendRequest(messageBody);
                     Log.i("writeRandomFile", "已发送随机数请求");
                 } else {
-                    showToast("文件权限未授予，无法在本地保存随机数文件");
+                    showToast("File permission not granted, unable to save random number file locally");
                 }
             }
             break;
             default:
-                Log.i("bluetooth", "跳过判断");
                 break;
         }
 
@@ -565,7 +619,7 @@ public class BluetoothActivity extends AppCompatActivity {
             if(mConnectThread != null){
                 mConnectThread.sendData(jsonMessage.getBytes());
             }else{
-                showToast("未连接到QR设备，请连接后再试。");
+                showToast("Not connected to QR device, please connect and try again.");
             }
         } catch (JsonProcessingException e) {
             Log.i("QR_Config", "报错：" + e.toString());
@@ -586,7 +640,7 @@ public class BluetoothActivity extends AppCompatActivity {
             Toast.makeText(this, "连接到设备：" + device.getName(), Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             Log.e(TAG, "Could not connect to device", e);
-            Toast.makeText(this, "无法连接到设备", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Unable to connect to device", Toast.LENGTH_SHORT).show();
         }
     }
 
